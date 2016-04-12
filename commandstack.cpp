@@ -2,8 +2,6 @@
 
 #include "icommand.h"
 
-#include <algorithm>
-
 CommandStack::~CommandStack()
 {
     for(auto iter = m_cmdVector.begin(); iter != m_cmdVector.end(); ++iter)
