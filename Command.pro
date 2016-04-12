@@ -5,10 +5,12 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     appendtextcommand.cpp \
-    commandstack.cpp
+    commandstack.cpp \
+    uppercasecommand.cpp
 
 HEADERS += \
     icommand.h \
     appendtextcommand.h \
-    commandstack.h
+    commandstack.h \
+    uppercasecommand.h
 

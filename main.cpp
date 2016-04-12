@@ -1,52 +1,59 @@
 #include <iostream>
+#include <limits>
 
 #include "icommand.h"
 #include "appendtextcommand.h"
 #include "commandstack.h"
+#include "uppercasecommand.h"
 
 using namespace std;
 
 int main()
 {
-    string teste = "ola";
+    string teste;
+    string appended;
+
+
 
     CommandStack stack;
 
-    AppendTextCommand *cmd1 = new AppendTextCommand(&teste, " tudo ");
-    AppendTextCommand *cmd2 = new AppendTextCommand(&teste, "bem?");
-	AppendTextCommand *cmd3 = new AppendTextCommand(&teste, "ok?");
-    AppendTextCommand *cmd4 = new AppendTextCommand(&teste, "bom?");
-	AppendTextCommand *cmd5 = new AppendTextCommand(&teste, "nice?");
+    int opcao;
+    bool more = true;
 
-    stack.push(cmd1); 
-    stack.push(cmd2); 
+    do
+    {
+        cout << teste << "\n\n\n"
+             << "1 para concatenar uma string na string digitada\n"
+             << "2 para deixar a string maiuscula\n"
+             << "3 para dar << undo no command atual\n"
+             << "4 para dar redo >> no command atual\n"
+             << "qualquer coisa para sair\n";
 
-	// undo and redo and undo again cmd2 command
-	stack.undo(); 
-	stack.redo(); 
-	stack.undo(); 
-
-	// notice that the last instruction has called undo(), so I am going to replace cmd2 by cmd3, removing (delete) cmd2 in the process
-	stack.push(cmd3); // cmd2 gets deleted, replaced by cmd3
-	
-	
-	stack.undo(); // undo cmd3
-	
-	stack.push(cmd4); // cmd3 gets deleted, replaced by cmd4
-
-	stack.undo(); // undo cmd4
-	stack.undo(); // undo cmd1
-
-	stack.redo(); // redo cmd1
-	stack.redo(); // redo cmd4;
-
-	stack.redo(); // calling redo() once again does nothing to cmd4 as expected
-	stack.undo();
-	
-	stack.push(cmd5); // cmd4 gets deleted, replaced by cmd5
-
-	// show result
-    cout << teste; // expected: "olá tudo nice?"
+        cin >> opcao;
+        switch(opcao)
+        {
+        case 1:
+            cout << "Digite uma string a ser concatenada: ";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            getline(cin, appended);
+            stack.push(new AppendTextCommand(&teste, appended));
+            break;
+        case 2:
+            stack.push(new UppercaseCommand(&teste, appended));
+            break;
+        case 3:
+            stack.undo();
+            break;
+        case 4:
+            stack.redo();
+            break;
+        default:
+            more = false;
+            break;
+        }
+    }
+    while(more);
 
 	cin.get();
     return 0;
