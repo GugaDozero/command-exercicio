@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+#include <vector>
 
 #include "icommand.h"
 #include "appendtextcommand.h"
@@ -11,49 +12,80 @@ using namespace std;
 int main()
 {
     string teste;
-    string appended;
-
-
+	string appendstr;
+    vector<string> appendVec; // a solution for uppercasecommand's issue
+    signed indiceVec = -1;
 
     CommandStack stack;
 
     int opcao;
     bool more = true;
 
-    do
+    while(more)
     {
         cout << teste << "\n\n\n"
              << "1 para concatenar uma string na string digitada\n"
              << "2 para deixar a string maiuscula\n"
              << "3 para dar << undo no command atual\n"
              << "4 para dar redo >> no command atual\n"
-             << "qualquer coisa para sair\n";
+             << "0 para sair\n";
+
 
         cin >> opcao;
-        switch(opcao)
+
+
+        if(opcao == 1)
         {
-        case 1:
             cout << "Digite uma string a ser concatenada: ";
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            getline(cin, appended);
-            stack.push(new AppendTextCommand(&teste, appended));
-            break;
-        case 2:
-            stack.push(new UppercaseCommand(&teste, appended));
-            break;
-        case 3:
-            stack.undo();
-            break;
-        case 4:
-            stack.redo();
-            break;
-        default:
-            more = false;
-            break;
+
+            // purging keyboard buffer
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            getline(cin, appendstr);
+
+            appendVec.push_back(appendstr);
+            indiceVec++;
+			
+			if(appendstr.empty())
+			{
+				cout << "\n\nErro: Nada foi digitado\n\n";
+				continue;
+			}
+
+            stack.push(new AppendTextCommand(&teste, appendstr));
+         }
+        else if(opcao == 2)
+        {
+            stack.push(new UppercaseCommand(&teste, appendstr));
         }
-    }
-    while(more);
+        else if(opcao == 3)
+        {
+            stack.undo();
+
+            if(!appendVec.empty())
+			{
+                if(indiceVec >= 0) appendstr = appendVec[indiceVec--];
+			}
+
+         }
+        else if(opcao == 4)
+        {
+            stack.redo();
+
+            if(!appendVec.empty())
+			{
+                if(indiceVec != appendVec.size() - 1) appendstr = appendVec[++indiceVec];
+			}
+
+
+         }
+        else if(!opcao)
+        {
+            more = false;
+        }
+
+    } // while
 
 	cin.get();
     return 0;

@@ -1,6 +1,7 @@
 #include "uppercasecommand.h"
 
 #include <cctype>
+#include <cstdlib>
 
 UppercaseCommand::UppercaseCommand(string *doc, const string &text) :
     m_doc(doc),
@@ -16,8 +17,10 @@ void UppercaseCommand::redo()
         *iter = toupper(*iter);
     }
 
-    this->m_doc->erase(this->m_doc->length() - this->m_text.length(), this->m_text.length());
-    this->m_doc->insert(this->m_doc->length() + this->m_text.length() - 1, this->m_text);
+    int shift = abs((int)(this->m_doc->length() - this->m_text.length()));
+
+    this->m_doc->erase(shift, this->m_text.length());
+    this->m_doc->replace(shift, this->m_text.length(), this->m_text);
 }
 
 void UppercaseCommand::undo()
@@ -27,8 +30,10 @@ void UppercaseCommand::undo()
         *iter = tolower(*iter);
     }
 
-    this->m_doc->erase(this->m_doc->length() - this->m_text.length(), this->m_text.length());
-    this->m_doc->insert(this->m_doc->length() + this->m_text.length() - 1, this->m_text);
+    int shift = abs((int)(this->m_doc->length() - this->m_text.length()));
+
+    this->m_doc->erase(shift, this->m_text.length());
+    this->m_doc->replace(shift, this->m_text.length(), this->m_text);
 }
 
 
