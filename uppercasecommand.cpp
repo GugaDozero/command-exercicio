@@ -38,7 +38,7 @@ void UppercaseCommand::redo()
     for(unsigned i = 0; i < m_doc->length(); ++i)
     {
         char ch = m_doc->operator [](i);
-        if(!((ch >> 5) & 1) || (ch == 0x20)) ++count; // 0x20 can either a space char or an upper/lower cases flag, we treat both
+        if(!((ch >> 5) & 1) || (ch == 0x20)) ++count; // 0x20 can be either a space char or an upper/lower cases flag, we treat both
     }
 
     if(count == m_doc->length()) return;
@@ -48,7 +48,7 @@ void UppercaseCommand::redo()
 
     for (auto iter = m_doc->begin(); iter != m_doc->end(); ++iter)
     {
-            if(*iter != 0x20) *iter &= ~(0x20); // 0x20 can either a space char or an upper/lower cases flag, we treat both
+            if(*iter != 0x20) *iter &= ~(0x20); // 0x20 can be either a space char or an upper/lower cases flag, we treat both
     }
 
     m_isDone = true;
