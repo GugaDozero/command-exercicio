@@ -3,16 +3,18 @@
 #include <cctype>
 #include <cstdlib>
 
-UppercaseCommand::UppercaseCommand(string *doc, const string &text) :
+UppercaseCommand::UppercaseCommand(string *doc) :
     m_doc(doc),
-    m_text(text)
+    m_isDone(false)
 {
 
 }
 
 void UppercaseCommand::redo()
 {
-    for (auto iter = m_text.begin(); iter != m_text.end(); ++iter)
+    /* before long ago, nothing related to the actual code, please, dont mix these codes */
+
+    /*for (auto iter = m_text.begin(); iter != m_text.end(); ++iter)
     {
         *iter = toupper(*iter);
     }
@@ -20,11 +22,43 @@ void UppercaseCommand::redo()
     int shift = abs((int)(this->m_doc->length() - this->m_text.length()));
 
     this->m_doc->erase(shift, this->m_text.length());
-    this->m_doc->replace(shift, this->m_text.length(), this->m_text);
+    this->m_doc->replace(shift, this->m_text.length(), this->m_text);*/
+
+
+    /* dont mix, nothing related, arbitrary implementation */
+
+    if(m_isDone)
+    {
+        m_oldDoc.swap(*m_doc);
+        return;
+    }
+
+    unsigned count = 0;
+
+    for(unsigned i = 0; i < m_doc->length(); ++i)
+    {
+        char ch = m_doc->operator [](i);
+        if(!((ch >> 5) & 1) || (ch == 0x20)) ++count; // 0x20 is as a space char as an upper/lower cases flag
+    }
+
+    if(count == m_doc->length()) return;
+
+
+    m_oldDoc = *m_doc;
+
+    for (auto iter = m_doc->begin(); iter != m_doc->end(); ++iter)
+    {
+            if(!isspace(*iter)) *iter &= ~(0x20);
+    }
+
+    m_isDone = true;
 }
 
 void UppercaseCommand::undo()
 {
+
+    /* same as above */
+    /*
     for (auto iter = m_text.begin(); iter != m_text.end(); ++iter)
     {
         *iter = tolower(*iter);
@@ -33,7 +67,9 @@ void UppercaseCommand::undo()
     int shift = abs((int)(this->m_doc->length() - this->m_text.length()));
 
     this->m_doc->erase(shift, this->m_text.length());
-    this->m_doc->replace(shift, this->m_text.length(), this->m_text);
+    this->m_doc->replace(shift, this->m_text.length(), this->m_text);*/
+
+    if(m_isDone) m_oldDoc.swap(*m_doc);
 }
 
 

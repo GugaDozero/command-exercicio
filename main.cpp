@@ -13,19 +13,16 @@ int main()
 {
     string teste;
 	string appendstr;
-    vector<string> appendVec; // a solution for uppercasecommand's issue
-    signed indiceVec = -1;
 
     CommandStack stack;
 
     int opcao;
-    bool more = true;
 
-    while(more)
+    while(true)
     {
         cout << teste << "\n\n\n"
              << "1 para concatenar uma string na string digitada\n"
-             << "2 para deixar a string maiuscula\n"
+             << "2 para deixar a string inteira maiuscula\n"
              << "3 para dar << undo no command atual\n"
              << "4 para dar redo >> no command atual\n"
              << "0 para sair\n";
@@ -43,9 +40,6 @@ int main()
             cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             getline(cin, appendstr);
-
-            appendVec.push_back(appendstr);
-            indiceVec++;
 			
 			if(appendstr.empty())
 			{
@@ -57,36 +51,25 @@ int main()
          }
         else if(opcao == 2)
         {
-            stack.push(new UppercaseCommand(&teste, appendstr));
+            stack.push(new UppercaseCommand(&teste));
         }
         else if(opcao == 3)
         {
             stack.undo();
-
-            if(!appendVec.empty())
-			{
-                if(indiceVec >= 0) appendstr = appendVec[indiceVec--];
-			}
 
          }
         else if(opcao == 4)
         {
             stack.redo();
 
-            if(!appendVec.empty())
-			{
-                if(indiceVec != appendVec.size() - 1) appendstr = appendVec[++indiceVec];
-			}
-
 
          }
         else if(!opcao)
         {
-            more = false;
+            break;
         }
 
     } // while
 
-	cin.get();
     return 0;
 }

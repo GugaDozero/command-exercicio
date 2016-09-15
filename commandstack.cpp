@@ -26,9 +26,9 @@ void CommandStack::push(ICommand *cmd)
 		while(m_currentIndex != currentPos);
 	}
 
-	m_cmdVector.push_back(cmd);
-	m_currentIndex++;
-	cmd->redo();
+    m_cmdVector.push_back(cmd);
+    m_currentIndex++;
+    cmd->redo();
 }
 
 void CommandStack::redo()

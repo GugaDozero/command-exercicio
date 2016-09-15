@@ -8,14 +8,16 @@
 class UppercaseCommand : public ICommand
 {
 public:
-    UppercaseCommand(string *doc, const string &text);
+    UppercaseCommand(string *doc);
 
     virtual void undo();
     virtual void redo();
 
 private:
     string *m_doc;
-    string m_text;
+    string m_oldDoc;
+
+    bool m_isDone;
 };
 
 #endif // UPPERCASECOMMAND_H
